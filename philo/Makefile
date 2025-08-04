@@ -39,12 +39,10 @@ bonus: $(OBJS)
 #-----------------------------------------------------------
 clean:
 	@rm -f $(OBJS)
-	@$(MAKE) -C bonus clean > /dev/null
 	@echo "🧹 Archivos objeto y temporales eliminados."
 
 fclean: clean
 	@rm -f $(NAME)
-	@$(MAKE) -C bonus fclean > /dev/null
 	@echo "🧼 Todo limpio."
 
 re: fclean all
