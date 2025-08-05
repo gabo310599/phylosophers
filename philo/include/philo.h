@@ -6,7 +6,7 @@
 /*   By: gojeda <gojeda@student.42madrid.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 11:27:00 by gojeda            #+#    #+#             */
-/*   Updated: 2025/08/04 17:49:03 by gojeda           ###   ########.fr       */
+/*   Updated: 2025/08/05 18:36:34 by gojeda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ typedef struct s_rules
 	long			start_time;
 	pthread_mutex_t	print_mutex;
 	pthread_mutex_t	*forks;
+	pthread_mutex_t	death_mutex;
 }	t_rules;
 
 //Philos
@@ -63,7 +64,14 @@ int		init_mutexes(t_rules *rules);
 
 //Routines
 void	safe_print(t_philo *philo, char *msg);
-void	ft_usleep(long duration);
+void	ft_usleep(long duration, t_rules *rules);
 void	*philo_routine(void *arg);
+void	*monitor_routine(void *arg);
+
+//Control
+int		life(t_rules rules, t_philo *philos);
+int		has_someone_died(t_rules *rules);
+void	set_someone_died(t_rules *rules);
+void	control_someone_died(t_rules *rules, t_philo *philos, int position);
 /* ************************************************************************** */
 #endif

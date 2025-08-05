@@ -8,6 +8,7 @@ SRCS = src/main.c \
 		src/utils.c \
 		src/routine.c \
 		src/parser.c \
+		src/control_philos.c \
 
 OBJS = $(SRCS:.c=.o)
 

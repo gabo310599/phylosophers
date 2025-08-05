@@ -6,7 +6,7 @@
 /*   By: gojeda <gojeda@student.42madrid.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 16:25:39 by gojeda            #+#    #+#             */
-/*   Updated: 2025/08/04 17:00:48 by gojeda           ###   ########.fr       */
+/*   Updated: 2025/08/05 17:56:09 by gojeda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,5 +50,7 @@ int	init_mutexes(t_rules *rules)
 	}
 	if (pthread_mutex_init(&rules->print_mutex, NULL) != 0)
 		return (print_error("Fallos al inicializar print mutex"), 0);
+	if (pthread_mutex_init(&rules->death_mutex, NULL) != 0)
+		return (print_error("Fallo al inicializar death mutex"), 0);
 	return (1);
 }
