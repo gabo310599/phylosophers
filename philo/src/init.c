@@ -6,7 +6,7 @@
 /*   By: gojeda <gojeda@student.42madrid.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 16:25:39 by gojeda            #+#    #+#             */
-/*   Updated: 2025/08/05 17:56:09 by gojeda           ###   ########.fr       */
+/*   Updated: 2025/08/07 20:33:45 by gojeda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,13 @@ t_philo	*init_philos(t_rules *rules)
 		philos[i].rules = rules;
 		philos[i].left_fork = &rules->forks[i];
 		philos[i].right_fork = &rules->forks[(i + 1) % rules->philo_count];
+		if (pthread_mutex_init(&philos[i].last_meal_mutex, NULL) != 0)
+		{
+			while (--i >= 0)
+				pthread_mutex_destroy(&philos[i].last_meal_mutex);
+			free(philos);
+			return (NULL);
+		}
 		i++;
 	}
 	return (philos);
@@ -52,5 +59,8 @@ int	init_mutexes(t_rules *rules)
 		return (print_error("Fallos al inicializar print mutex"), 0);
 	if (pthread_mutex_init(&rules->death_mutex, NULL) != 0)
 		return (print_error("Fallo al inicializar death mutex"), 0);
+	if (pthread_mutex_init(&rules->full_mutex, NULL) != 0)
+		return (print_error("Fallo al inicializar full_mutex"), 0);
+	rules->full_philos = 0;
 	return (1);
 }

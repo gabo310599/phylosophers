@@ -6,7 +6,7 @@
 /*   By: gojeda <gojeda@student.42madrid.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 11:27:00 by gojeda            #+#    #+#             */
-/*   Updated: 2025/08/05 18:36:34 by gojeda           ###   ########.fr       */
+/*   Updated: 2025/08/07 20:48:05 by gojeda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,9 @@ typedef struct s_rules
 	int				time_to_sleep;
 	int				must_eat_count;
 	int				someone_died;
+	int				full_philos;
 	long			start_time;
+	pthread_mutex_t	full_mutex;
 	pthread_mutex_t	print_mutex;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	death_mutex;
@@ -46,6 +48,7 @@ typedef struct s_philo
 	pthread_t		thread;
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*right_fork;
+	pthread_mutex_t	last_meal_mutex;
 	t_rules			*rules;
 }	t_philo;
 /* ************************************************************************** */
@@ -61,6 +64,7 @@ long	get_time_in_ms(void);
 int		parse_args(int argc, char **argv, t_rules *rules);
 t_philo	*init_philos(t_rules *rules);
 int		init_mutexes(t_rules *rules);
+void	destroy_mutex(t_philo *philos, int count, t_rules *rules);
 
 //Routines
 void	safe_print(t_philo *philo, char *msg);
@@ -69,9 +73,11 @@ void	*philo_routine(void *arg);
 void	*monitor_routine(void *arg);
 
 //Control
-int		life(t_rules rules, t_philo *philos);
+int		life(t_rules *rules, t_philo *philos);
 int		has_someone_died(t_rules *rules);
 void	set_someone_died(t_rules *rules);
 void	control_someone_died(t_rules *rules, t_philo *philos, int position);
+int		has_eating_enough(t_rules *rules);
+
 /* ************************************************************************** */
 #endif

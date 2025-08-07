@@ -6,7 +6,7 @@
 /*   By: gojeda <gojeda@student.42madrid.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 11:46:35 by gojeda            #+#    #+#             */
-/*   Updated: 2025/08/04 17:01:25 by gojeda           ###   ########.fr       */
+/*   Updated: 2025/08/07 20:28:42 by gojeda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,12 @@ int	parse_args(int argc, char **argv, t_rules *rules)
 	rules->time_to_eat = ft_atoi(argv[3]);
 	rules->time_to_sleep = ft_atoi(argv[4]);
 	if (argc == 6)
+	{
 		rules->must_eat_count = ft_atoi(argv[5]);
+		if (rules->must_eat_count <= 0)
+			return ((print_error("must_eat_count debe ser > 0"), 0));
+	}
 	else
 		rules->must_eat_count = -1;
-	rules->someone_died = 0;
-	rules->start_time = get_time_in_ms();
-	return (1);
+	return (rules->someone_died = 0, rules->start_time = get_time_in_ms(), 1);
 }

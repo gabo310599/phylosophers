@@ -6,7 +6,7 @@
 /*   By: gojeda <gojeda@student.42madrid.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 17:34:37 by gojeda            #+#    #+#             */
-/*   Updated: 2025/08/05 18:29:42 by gojeda           ###   ########.fr       */
+/*   Updated: 2025/08/07 20:47:37 by gojeda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,13 @@ void	control_someone_died(t_rules *rules, t_philo *philos, int position)
 	pthread_mutex_unlock(&rules->print_mutex);
 }
 
-int	life(t_rules rules, t_philo *philos)
+int	life(t_rules *rules, t_philo *philos)
 {
 	int			i;
 	pthread_t	monitor_thread;
 
 	i = 0;
-	while (i < rules.philo_count)
+	while (i < rules->philo_count)
 	{
 		if (pthread_create(&philos[i].thread, NULL,
 				philo_routine, &philos[i]) != 0)
@@ -55,11 +55,27 @@ int	life(t_rules rules, t_philo *philos)
 	if (pthread_create(&monitor_thread, NULL, monitor_routine, philos) != 0)
 		return (print_error("Fallo al crear monitor"), 0);
 	i = 0;
-	while (i < rules.philo_count)
+	while (i < rules->philo_count)
 	{
 		pthread_join(philos[i].thread, NULL);
 		i++;
 	}
 	pthread_join(monitor_thread, NULL);
+	return (1);
+}
+
+int	has_eating_enough(t_rules *rules)
+{
+	if (rules->must_eat_count != -1)
+	{
+		pthread_mutex_lock(&rules->full_mutex);
+		if (rules->full_philos >= rules->philo_count)
+		{
+			pthread_mutex_unlock(&rules->full_mutex);
+			set_someone_died(rules);
+			return (0);
+		}
+		pthread_mutex_unlock(&rules->full_mutex);
+	}
 	return (1);
 }
